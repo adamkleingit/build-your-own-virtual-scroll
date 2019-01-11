@@ -1,34 +1,24 @@
 import React, { memo, useMemo } from "react";
 
-const BLOCK_SIZE = 30;
-const BLOCK_PADDING = 50;
+const RENDER_AHEAD = 10;
 
-const Viewport = ({ children, count, height, childHeight, scrollTop }) => {
+const Viewport = ({ renderItem, count, height, childHeight, scrollTop }) => {
   const totalHeight = count * childHeight;
-  const visibleNodeCount = useMemo(() => Math.ceil(height / childHeight), [
-    height,
-    childHeight
-  ]);
 
-  let startNode = Math.floor(scrollTop / childHeight) - BLOCK_PADDING;
-  startNode = startNode - (startNode % BLOCK_SIZE);
+  let startNode = Math.floor(scrollTop / childHeight) - RENDER_AHEAD;
   startNode = Math.max(0, startNode);
 
-  let endNode = startNode + visibleNodeCount + 2 * BLOCK_PADDING;
+  const visibleNodeCount = Math.ceil(height / childHeight) + 2 * RENDER_AHEAD;
+  let endNode = startNode + visibleNodeCount;
   endNode = Math.min(count - 1, endNode);
 
-  const translate = startNode * childHeight;
+  const offsetY = startNode * childHeight + 1;
 
-  const visibleChildren = useMemo(
-    () => {
-      const childrenCount = endNode - startNode;
+  const childrenCount = endNode - startNode;
 
-      return new Array(childrenCount)
-        .fill(null)
-        .map((_, index) => children({ index: index + startNode }));
-    },
-    [startNode, endNode]
-  );
+  const visibleChildren = new Array(childrenCount)
+    .fill(null)
+    .map((_, index) => renderItem({ index: index + startNode }));
 
   return (
     <div
@@ -42,7 +32,7 @@ const Viewport = ({ children, count, height, childHeight, scrollTop }) => {
       <div
         style={{
           willChange: "transform",
-          transform: `translateY(${translate}px)`
+          transform: `translateY(${offsetY}px)`
         }}
       >
         {visibleChildren}

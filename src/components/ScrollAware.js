@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, memo } from "react";
 import { throttle } from "lodash/fp";
 
 const ScrollAware = ({ children, height }) => {
-  const [scrollTop, setScrollTop] = useState(null);
+  const [scrollTop, setScrollTop] = useState(0);
   const ref = useRef(null);
 
   const onScroll = e =>

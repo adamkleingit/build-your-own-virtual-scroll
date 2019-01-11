@@ -23,9 +23,8 @@ function App() {
               height={height}
               scrollTop={scrollTop}
               childHeight={20}
-            >
-              {renderItem}
-            </Viewport>
+              renderItem={renderItem}
+            />
             <h1>Footer</h1>
           </div>
         )}
