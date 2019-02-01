@@ -1,34 +1,39 @@
-import React from "react";
+import React, { memo } from "react";
 import ReactDOM from "react-dom";
-import Viewport from "./components/Viewport";
-import ScrollAware from "./components/ScrollAware";
+import VirtualScroll from "./components/VirtualScroll";
 import "./styles.css";
 
-const renderItem = ({ index }) => (
-  <div className="row" key={index}>
+// usage:
+const Item = memo(({ index }) => (
+  <div
+    style={{
+      height: 30,
+      lineHeight: "30px",
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "0 10px"
+    }}
+    className="row"
+    key={index}
+  >
+    <img
+      alt={index}
+      src={`http://lorempixel.com/30/30/animals/${(index % 10) + 1}`}
+    />
     row index {index}
   </div>
-);
+));
 
 function App() {
   return (
     <div className="App">
       <h1>Virtual Scroll</h1>
-      <ScrollAware height={400}>
-        {({ scrollTop, height }) => (
-          <div>
-            <h1>Header</h1>
-            <Viewport
-              count={10000}
-              height={height}
-              scrollTop={scrollTop}
-              childHeight={20}
-              renderItem={renderItem}
-            />
-            <h1>Footer</h1>
-          </div>
-        )}
-      </ScrollAware>
+      <VirtualScroll
+        itemCount={10000}
+        height={300}
+        childHeight={30}
+        Item={Item}
+      />
     </div>
   );
 }
